@@ -1,0 +1,60 @@
+input_string = input()
+no_spaces = input_string.replace(" ", "") #scoatem spatiile din sir pentru a lucra mai usor
+
+split_into_letters = [char for char in no_spaces] #punem caracterele din sir intr-o lista pentru a putea lucra cu pozitii
+
+length = len(split_into_letters)
+
+ok = 1
+
+letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+connectors ="∧∧∨∨⇒→¬˜!⇔"
+
+for i in range(length):
+
+    if split_into_letters[i] == '(' :
+        if split_into_letters[i+1] == '(' or split_into_letters[i+1] in letters or split_into_letters[i+1]=='¬':
+           continue
+        else:
+            print("Expected a complex/atomic statement or a negation after" + split_into_letters[i])
+            ok = 0
+            break
+
+    if split_into_letters[i] == '!' or split_into_letters[i] == '¬' or split_into_letters[i] == '˜':
+        if split_into_letters[i+1] in letters or split_into_letters[i+1] == '(':
+            continue
+        else:
+            print("Expected either a complex or an atomic statement after " + split_into_letters[i] )
+            ok = 0
+            break
+
+    if split_into_letters[i] in letters:
+        if split_into_letters[i+1] in connectors:
+            continue
+        elif split_into_letters[i-1] in connectors:
+            if split_into_letters[i+1] == ')':
+                continue
+        elif split_into_letters[i-1] in connectors and split_into_letters[i+1] != ')':
+            print("Expected end of statement ( ')' ) after "+ split_into_letters[i])
+            ok = 0
+            break
+        elif split_into_letters[i+1] not in connectors:
+            print("Expected a connector after " + split_into_letters[i])
+            ok = 0
+            break
+        else:
+            ok = 0
+            break
+
+    if split_into_letters[i] in connectors:
+        if split_into_letters[i+1] in letters:
+            continue
+        elif split_into_letters[i+1] == '(':
+            continue
+        else:
+                print("Expected an atomic or complex statement after " + split_into_letters[i])
+                ok = 0
+                break
+
+if ok == 1: print("Valid sentence")
+else: print("Not a valid sentence")
